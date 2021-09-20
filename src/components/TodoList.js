@@ -1,9 +1,21 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import TodoForm from './TodoForm';
 import Todo from './Todo';
 
 function TodoList() {
-    const [todos, setTodos] = useState([]);
+    // const [todos, setTodos] = useState([]);
+    let initTodo;
+    if(localStorage.getItem('todos') === null){
+        initTodo = [];
+    }
+    else {
+        initTodo = JSON.parse(localStorage.getItem('todos'));
+    }
+
+    const [todos,setTodos] = useState(initTodo);
+    useEffect(() => {
+        localStorage.setItem('todos', JSON.stringify(todos));
+    }, [todos])
 
     const addTodo = todo => {
         if (!todo.text || /^\s*$/.test(todo.text)) {
@@ -14,6 +26,7 @@ function TodoList() {
 
         setTodos(newTodos);
         console.log(...todos);
+        localStorage.setItem('todos',JSON.stringify(todos))
     };
 
     const updateTodo = (todoId, newValue) => {
